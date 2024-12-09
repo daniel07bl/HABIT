@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Kameraaufnahme</title>
+    <style>
+        /* Verhindert das Scrollen auf der gesamten Seite */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Deaktiviert das Scrollen */
+        }
+    </style>
+</head>
+<body>
+    <h1>Kameraaufnahme auf dem iPhone</h1>
+    <video id="video" autoplay playsinline></video>
+    <button id="capture">Bild aufnehmen</button>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const context = canvas.getContext('2d');
+
+        // Zugriff auf die Kamera anfordern
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error('Fehler beim Zugriff auf die Kamera:', err);
+            });
+
+        // Bild aufnehmen
+        captureButton.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Optional: Bild-Daten exportieren
+            const dataURL = canvas.toDataURL('image/png');
+            console.log('Bild-Daten-URL:', dataURL);
+        });
+    </script>
+</body>
+</html>
